@@ -1,0 +1,12 @@
+{
+  "configurations": [
+    {
+      "name": "Client",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": ["dev"],
+      "runtimeExecutable": "yarn",
+      "console": "integratedTerminal"
+    }
+  ]
+}
