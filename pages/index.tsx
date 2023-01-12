@@ -1,19 +1,36 @@
-import { useSession, signIn, signOut } from "next-auth/react";
+import { doc } from "firebase/firestore";
+import { Ad } from "modules/ads";
+import { adCollection, auth } from "modules/firebase";
+import { useDocumentData } from "react-firebase-hooks/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { GoogleAuthProvider, signInWithRedirect, signOut } from "firebase/auth";
+import { Button } from "flowbite-react";
+
+const provider = new GoogleAuthProvider();
 
 const Home = () => {
-  const { data: session } = useSession();
-  if (session) {
+  const [user, loadingUser] = useAuthState(auth);
+  const [ad, loading] = useDocumentData<Ad>(
+    doc(adCollection, "40DgDf70e50gG6w8A1Gu")
+  );
+
+  if (loadingUser || loading) {
+    return <>Loading</>;
+  } else if (user) {
     return (
       <>
-        Signed in as {session.user?.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
+        {user.displayName}
+        <Button onClick={() => signOut(auth)}>Sign out</Button>
       </>
     );
   }
   return (
     <>
-      Not signed in <br />
-      <button onClick={() => signIn("google")}>Sign in</button>
+      {ad?.price}
+      <br />
+      <Button onClick={() => signInWithRedirect(auth, provider)}>
+        Sign in
+      </Button>
     </>
   );
 };

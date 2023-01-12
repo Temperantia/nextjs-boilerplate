@@ -1,14 +1,30 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getFirelord, MetaTypeCreator } from "firelordjs";
-import { User } from "./authentication";
+import { getAuth } from "firebase/auth";
+import { Ad } from "./ads";
+import { getApps, initializeApp } from "firebase/app";
+import { collection, getFirestore } from "firebase/firestore";
 
-export type UserMeta = MetaTypeCreator<User, "users">;
+if (getApps().length === 0) {
+  const firebaseConfig = JSON.parse(
+    process.env.NEXT_PUBLIC_FIREBASE_CONFIG ?? ""
+  );
+  initializeApp(firebaseConfig);
+}
 
-const firebaseConfig = JSON.parse(
-  process.env.NEXT_PUBLIC_FIREBASE_CONFIG ?? ""
-);
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+export const auth = getAuth();
 
-export const usersRef = getFirelord<UserMeta>(db, "users");
+const db = getFirestore();
+
+export const adCollection = collection(db, "ads").withConverter<Ad>({
+  toFirestore: (ad) => ad,
+  fromFirestore: (snapshot) => {
+    const { contact, description, language, pictures, price } = snapshot.data();
+    return {
+      id: snapshot.id,
+      contact,
+      description,
+      language,
+      pictures,
+      price,
+    };
+  },
+});
