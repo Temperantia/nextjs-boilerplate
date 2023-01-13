@@ -5,7 +5,7 @@ import { collection, getFirestore } from "firebase/firestore";
 
 if (getApps().length === 0) {
   const firebaseConfig = JSON.parse(
-    process.env.NEXT_PUBLIC_FIREBASE_CONFIG ?? ""
+    process.env.NEXT_PUBLIC_FIREBASE_CONFIG ?? "{}"
   );
   initializeApp(firebaseConfig);
 }
