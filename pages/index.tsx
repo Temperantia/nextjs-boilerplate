@@ -4,7 +4,8 @@ import { adCollection, auth } from "modules/firebase";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { GoogleAuthProvider, signInWithRedirect, signOut } from "firebase/auth";
-import { Button } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
+import { format } from "utils/money";
 
 const provider = new GoogleAuthProvider();
 
@@ -15,7 +16,7 @@ const Home = () => {
   );
 
   if (loadingUser || loading) {
-    return <>Loading</>;
+    return <Spinner />;
   } else if (user) {
     return (
       <>
@@ -26,7 +27,7 @@ const Home = () => {
   }
   return (
     <>
-      {ad?.price}
+      {format(ad?.price ?? 0)}
       <br />
       <Button onClick={() => signInWithRedirect(auth, provider)}>
         Sign in
