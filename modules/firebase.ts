@@ -4,10 +4,10 @@ import { getApps, initializeApp } from "firebase/app";
 import { collection, getFirestore } from "firebase/firestore";
 
 if (getApps().length === 0) {
-  const firebaseConfig = JSON.parse(
-    process.env.NEXT_PUBLIC_FIREBASE_CONFIG ?? "{}"
-  );
-  initializeApp(firebaseConfig);
+  const firebaseConfig = process.env.NEXT_PUBLIC_FIREBASE_CONFIG;
+  if (firebaseConfig) {
+    initializeApp(JSON.parse(firebaseConfig));
+  }
 }
 
 export const auth = getAuth();
